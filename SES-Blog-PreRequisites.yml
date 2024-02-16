@@ -101,6 +101,10 @@ Resources:
         BufferingHints:
           IntervalInSeconds: 900
           SizeInMBs: 128
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref 'FirehoseCWLogGroup'
+          LogStreamName: S3Delivery
         CompressionFormat: GZIP
         ErrorOutputPrefix: '!{firehose:error-output-type}/'
         Prefix: "partitioned/!{partitionKeyFromQuery:SenderIdentity}/!{partitionKeyFromQuery:EventType}/!{timestamp:yyyy/MM/dd/HH/}/"
@@ -157,6 +161,23 @@ Resources:
                               - ''
                               - - 'aws-ses-analytics-kinesis-'
                                 - !Ref AWS::AccountId
+                    - 
+                      Effect: Allow
+                      Action:
+                          - logs:PutLogEvents
+                      Resource: !Sub '${FirehoseCWLogGroup.Arn}'
+
+  FirehoseCWLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/firehose/aws-ses-analytics-kinesis-${AWS::AccountId}'
+      RetentionInDays: 7
+  FirehoseCWLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref 'FirehoseCWLogGroup'
+      LogStreamName: S3Delivery
+
 
 Outputs:
   KinesisFireHoseDeliveryStream:
