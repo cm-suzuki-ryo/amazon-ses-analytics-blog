@@ -15,6 +15,11 @@ Resources:
             - !Ref AWS::AccountId
             - '-'
             - !Ref AWS::Region
+      LifecycleConfiguration:
+        Rules:
+          - Id: !Sub 'Delete-After-40-Days'
+            ExpirationInDays: 40
+            Status: Enabled
 
   S3SESEventsBucketPolicy:
     Type: AWS::S3::BucketPolicy
