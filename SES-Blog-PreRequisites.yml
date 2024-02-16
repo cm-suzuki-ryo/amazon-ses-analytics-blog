@@ -82,6 +82,7 @@ Resources:
                         - - 'arn:aws:s3:::'
                           - !Ref s3BucketSESEvents
                           - '*'
+
   firehoseDeliveryStream: 
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
@@ -101,7 +102,8 @@ Resources:
           IntervalInSeconds: 900
           SizeInMBs: 128
         CompressionFormat: GZIP
-        Prefix: "partitioned/!{partitionKeyFromQuery:eveSenderIdentityntType}/!{partitionKeyFromQuery:eventType}/!{timestamp:yyyy/MM/dd/HH/}/"
+        ErrorOutputPrefix: '!{firehose:error-output-type}/'
+        Prefix: "partitioned/!{partitionKeyFromQuery:SenderIdentity}/!{partitionKeyFromQuery:EventType}/!{timestamp:yyyy/MM/dd/HH/}/"
         RoleARN: !GetAtt firehoseSESRole.Arn
         ProcessingConfiguration:
           Enabled: true
@@ -109,9 +111,7 @@ Resources:
             - Type: MetadataExtraction
               Parameters:
                 - ParameterName: MetadataExtractionQuery
-                  ParameterValue: '{SenderIdentity: .mail.tags."ses:sender-identity"[0]}'
-                - ParameterName: MetadataExtractionQuery
-                  ParameterValue: '{EventType: .eventType}'
+                  ParameterValue: '{SenderIdentity: .mail.tags."ses:sender-identity"[0], EventType:.eventType}'
                 - ParameterName: JsonParsingEngine
                   ParameterValue: JQ-1.6
         DynamicPartitioningConfiguration:
