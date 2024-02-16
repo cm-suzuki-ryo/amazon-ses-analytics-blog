@@ -12,6 +12,8 @@ Resources:
             - ''
             - - 'aws-s3-ses-analytics-'
               - !Ref AWS::AccountId
+              - '-'
+              - !Ref AWS::Region
         LogFilePrefix: access-logs      
       BucketEncryption:
         ServerSideEncryptionConfiguration:
