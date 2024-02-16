@@ -109,7 +109,7 @@ Resources:
           LogStreamName: S3Delivery
         CompressionFormat: GZIP
         ErrorOutputPrefix: '!{firehose:error-output-type}/'
-        Prefix: "partitioned/!{partitionKeyFromQuery:SenderIdentity}/!{partitionKeyFromQuery:EventType}/!{timestamp:yyyy/MM/dd/HH/}/"
+        Prefix: "partitioned/!{partitionKeyFromQuery:SenderIdentity}/!{partitionKeyFromQuery:EventType}/!{timestamp:yyyy/MM/dd}/"
         RoleARN: !GetAtt firehoseSESRole.Arn
         ProcessingConfiguration:
           Enabled: true
