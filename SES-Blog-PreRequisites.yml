@@ -101,9 +101,24 @@ Resources:
           - ''
           - - 'arn:aws:s3:::'
             - !Ref s3BucketSESEvents
-        CompressionFormat: UNCOMPRESSED
-        Prefix: raw/
+        CompressionFormat: GZIP
+        Prefix: "partitioned/SenderIdentity=!{partitionKeyFromQuery:eveSenderIdentityntType}/EventType=!{partitionKeyFromQuery:eventType}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/"
         RoleARN: !GetAtt firehoseSESRole.Arn
+        ProcessingConfiguration:
+          Enabled: true
+          Processors:
+            - Type: MetadataExtraction
+              Parameters:
+                - ParameterName: MetadataExtractionQuery
+                  ParameterValue: '{SenderIdentity: .mail.tags."ses:sender-identity"[0]}'
+                - ParameterName: MetadataExtractionQuery
+                  ParameterValue: '{EventType: .eventType}'
+                - ParameterName: JsonParsingEngine
+                  ParameterValue: JQ-1.6
+        DynamicPartitioningConfiguration:
+          Enabled: true
+          RetryOptions:
+            DurationInSeconds: 300
 
   ConfigSetPermissionPutFirehose:
     Type: AWS::IAM::Role
