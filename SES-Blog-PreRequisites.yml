@@ -107,7 +107,7 @@ Resources:
           IntervalInSeconds: 900
           SizeInMBs: 128
         CompressionFormat: GZIP
-        Prefix: "partitioned/SenderIdentity=!{partitionKeyFromQuery:eveSenderIdentityntType}/EventType=!{partitionKeyFromQuery:eventType}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/"
+        Prefix: "partitioned/!{partitionKeyFromQuery:eveSenderIdentityntType}/!{partitionKeyFromQuery:eventType}/!{timestamp:yyyy/MM/dd/HH/}/"
         RoleARN: !GetAtt firehoseSESRole.Arn
         ProcessingConfiguration:
           Enabled: true
