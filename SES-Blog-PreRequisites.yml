@@ -1,12 +1,9 @@
 AWSTemplateFormatVersion:  2010-09-09
-
-Description: 'This template creates an S3 Bucket and Kinesis Firehose Delivery Stream that uses SES Config Set to ingest events on S3'
-
+Description: 'S3 Bucket and Firehose with dynamic partition support (senders,EventType) that uses SES Config Set'
 Resources:    
   s3BucketSESEvents:
     Type: AWS::S3::Bucket
     Properties:
-  
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
