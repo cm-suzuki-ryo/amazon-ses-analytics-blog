@@ -6,15 +6,7 @@ Resources:
   s3BucketSESEvents:
     Type: AWS::S3::Bucket
     Properties:
-      LoggingConfiguration: 
-        DestinationBucketName:
-          !Join
-            - ''
-            - - 'aws-s3-ses-analytics-'
-              - !Ref AWS::AccountId
-              - '-'
-              - !Ref AWS::Region
-        LogFilePrefix: access-logs      
+  
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -24,6 +16,8 @@ Resources:
           - ''
           - - 'aws-s3-ses-analytics-'
             - !Ref AWS::AccountId
+            - '-'
+            - !Ref AWS::Region
 
   S3SESEventsBucketPolicy:
     Type: AWS::S3::BucketPolicy
