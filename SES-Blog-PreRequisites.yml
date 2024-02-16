@@ -101,6 +101,9 @@ Resources:
           - ''
           - - 'arn:aws:s3:::'
             - !Ref s3BucketSESEvents
+        BufferingHints:
+          IntervalInSeconds: 900
+          SizeInMBs: 128
         CompressionFormat: GZIP
         Prefix: "partitioned/SenderIdentity=!{partitionKeyFromQuery:eveSenderIdentityntType}/EventType=!{partitionKeyFromQuery:eventType}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/"
         RoleARN: !GetAtt firehoseSESRole.Arn
